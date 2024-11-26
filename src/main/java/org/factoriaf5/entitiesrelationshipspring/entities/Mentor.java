@@ -1,10 +1,7 @@
 package org.factoriaf5.entitiesrelationshipspring.entities;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.io.FilenameFilter;
 
@@ -13,6 +10,7 @@ import java.io.FilenameFilter;
 public class Mentor {
     
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idMentor")
     private Long id;
     

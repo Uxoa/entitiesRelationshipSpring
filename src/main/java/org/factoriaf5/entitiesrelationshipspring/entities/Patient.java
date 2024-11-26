@@ -1,9 +1,6 @@
 package org.factoriaf5.entitiesrelationshipspring.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Patients")
@@ -11,6 +8,7 @@ public class Patient {
     
     
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idPatient")
     private Long id;
     
