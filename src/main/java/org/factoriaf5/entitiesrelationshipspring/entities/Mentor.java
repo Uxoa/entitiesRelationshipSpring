@@ -1,9 +1,8 @@
 package org.factoriaf5.entitiesrelationshipspring.entities;
 
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-
-import java.io.FilenameFilter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,17 +18,17 @@ public class Mentor {
     private String nameMentor;
     
     // RELACIÓN ONE TO MANY
-    @OneToMany(mappedBy = "mentor", cascade = CascadeType.ALL)
-    private List<Patient> patient;
+    @OneToMany(mappedBy = "mentor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Patient> patients = new ArrayList<>();
     
-    public Mentor(Long id, String nameMentor, List<Patient> patient) {
+    public Mentor(Long id, String nameMentor, List<Patient> patients) {
         this.id = id;
         this.nameMentor = nameMentor;
-        this.patient = patient;
+        this.patients = patients;
     }
     
     public Mentor() {
-    
     }
     
     public Long getId() {
@@ -40,15 +39,27 @@ public class Mentor {
         return nameMentor;
     }
     
+    public void setNameMentor(String nameMentor) {
+        this.nameMentor = nameMentor;
+    }
+    
     public List<Patient> getPatients() {
-        return patient;
+        return patients;
     }
     
-    public void setPatient(List<Patient> patient) {
-        this.patient = patient;
+    public void setPatients(List<Patient> patients) {
+        this.patients = patients;
     }
     
+    // Método para añadir un paciente
     public void addPatient(Patient patient) {
+        this.patients.add(patient);  // Añade el paciente a la lista
+        patient.setMentor(this);    // Establece la relación bidireccional
+    }
     
+    // Método para eliminar un paciente
+    public void removePatient(Patient patient) {
+        this.patients.remove(patient); // Elimina el paciente de la lista
+        patient.setMentor(null);       // Rompe la relación bidireccional
     }
 }

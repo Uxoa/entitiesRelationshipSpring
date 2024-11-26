@@ -67,11 +67,15 @@ public class MentorController {
     @GetMapping("/{id}/patients")
     public ResponseEntity<Mentor> getMentorWithPatients(@PathVariable Long id) {
         Optional<Mentor> optionalMentor = mentorRepository.findById(id);
+        
         if (optionalMentor.isPresent()) {
-            return ResponseEntity.ok(optionalMentor.get());
+            Mentor mentor = optionalMentor.get();
+            return ResponseEntity.ok(mentor); // Devuelve el mentor con sus pacientes
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Si no existe, devuelve 404
     }
+    
     
     
     

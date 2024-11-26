@@ -1,5 +1,6 @@
 package org.factoriaf5.entitiesrelationshipspring.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -24,6 +25,7 @@ public class Patient {
     // RELACIÓN MANY TO ONE
     @ManyToOne
     @JoinColumn(name = "mentor_id")
+    @JsonBackReference
     private Mentor mentor;
     
     public Patient(Long id, String namePatient, String speciePatient, String racePatient, Mentor mentor) {
