@@ -2,6 +2,7 @@ package org.factoriaf5.entitiesrelationshipspring.controllers;
 
 
 import org.factoriaf5.entitiesrelationshipspring.entities.Mentor;
+import org.factoriaf5.entitiesrelationshipspring.entities.Patient;
 import org.factoriaf5.entitiesrelationshipspring.repositories.MentorRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,11 +44,35 @@ public class MentorController {
     }
     
     
-    //Delete Borrar Mentor por id
+    // Delete Borrar Mentor por id
     @DeleteMapping("/{id}")
     public void deleteMentorById(@PathVariable Long id){
         this.mentorRepository.deleteById(id);
     }
+    
+    
+    // Crear Mentor con Pacientes
+    @PostMapping
+    public Mentor createMentorWithPatients(@RequestBody Mentor mentor) {
+        // Asocia cada paciente al mentor
+        if (mentor.getPatients() != null) {
+            for (Patient patient : mentor.getPatients()) {
+                patient.setMentor(mentor);
+            }
+        }
+        return mentorRepository.save(mentor);
+    }
+    
+    // Este endpoint devuelve un mentor junto con todos sus pacientes.
+    @GetMapping("/{id}/patients")
+    public ResponseEntity<Mentor> getMentorWithPatients(@PathVariable Long id) {
+        Optional<Mentor> optionalMentor = mentorRepository.findById(id);
+        if (optionalMentor.isPresent()) {
+            return ResponseEntity.ok(optionalMentor.get());
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    
     
     
 }

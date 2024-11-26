@@ -21,17 +21,21 @@ public class Patient {
     @Column(name = "racePatient")
     private String racePatient;
     
-    public Patient(Long id, String namePatient, String speciePatient, String racePatient) {
+    // RELACIÓN MANY TO ONE
+    @ManyToOne
+    @JoinColumn(name = "mentor_id")
+    private Mentor mentor;
+    
+    public Patient(Long id, String namePatient, String speciePatient, String racePatient, Mentor mentor) {
         this.id = id;
         this.namePatient = namePatient;
         this.speciePatient = speciePatient;
         this.racePatient = racePatient;
+        this.mentor = mentor;
     }
     
     public Patient() {
-    
     }
-    
     
     public Long getId() {
         return id;
@@ -41,11 +45,22 @@ public class Patient {
         return namePatient;
     }
     
+    
     public String getSpeciePatient() {
         return speciePatient;
     }
     
+    
     public String getRacePatient() {
         return racePatient;
+    }
+    
+    
+    public Mentor getMentor() {
+        return mentor;
+    }
+    
+    public void setMentor(Mentor mentor) {
+        this.mentor = mentor;
     }
 }

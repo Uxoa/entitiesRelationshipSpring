@@ -1,6 +1,8 @@
 package org.factoriaf5.entitiesrelationshipspring.controllers;
 
+import org.factoriaf5.entitiesrelationshipspring.entities.Mentor;
 import org.factoriaf5.entitiesrelationshipspring.entities.Patient;
+import org.factoriaf5.entitiesrelationshipspring.repositories.MentorRepository;
 import org.factoriaf5.entitiesrelationshipspring.repositories.PatientRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +17,11 @@ public class PatientController {
     
     // Inyecto PatientRepository como parámetro
     private final PatientRepository patientRepository;
+    private final MentorRepository mentorRepository;
     
-    public PatientController(PatientRepository patientRepository) {
+    public PatientController(PatientRepository patientRepository, MentorRepository mentorRepository) {
         this.patientRepository = patientRepository;
+        this.mentorRepository = mentorRepository;
     }
     
     
@@ -42,6 +46,25 @@ public class PatientController {
             return new ResponseEntity<>(optionalPatient.get(), HttpStatus.FOUND);
         }
         return new  ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+    
+    // DELETE -> Borrar paciente por id
+    @DeleteMapping("/{id}")
+    public void deletePatientById(@PathVariable Long id){
+        patientRepository.deleteById(id);
+    }
+    
+    //  lógica para asignar un mentor al crear un paciente
+    @PostMapping("/{mentorId}")
+    public ResponseEntity<Patient> createPatientForMentor(@PathVariable Long mentorId, @RequestBody Patient patient) {
+        Optional<Mentor> optionalMentor = mentorRepository.findById(mentorId);
+        if (optionalMentor.isPresent()) {
+            Mentor mentor = optionalMentor.get();
+            mentor.addPatient(patient);
+            mentorRepository.save(mentor); // Guardar mentor guarda los pacientes en cascada
+            return new ResponseEntity<>(patient, HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     
 }
